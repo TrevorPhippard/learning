@@ -1,15 +1,15 @@
-import { ProfileId } from '../value-objects/profile-id.vo';
-import { UserAccountId } from '../value-objects/user-account-id.vo';
-import { FullName } from '../value-objects/full-name.vo';
-import { Headline } from '../value-objects/headline.vo';
-import { Summary } from '../value-objects/summary.vo';
-import { Location } from '../value-objects/location.vo';
-import { ImageUrl } from '../value-objects/image-url.vo';
-import { Skill } from '../entities/skill.entity';
-import { Experience } from '../entities/experience.entity';
-import { Education } from '../entities/education.entity';
-import { Certification } from '../entities/certification.entity';
-import { SkillId } from '../value-objects/skill-id.vo';
+import { ProfileId } from "../value-objects/profile-id.vo";
+import { UserAccountId } from "../value-objects/user-account-id.vo";
+import { FullName } from "../value-objects/full-name.vo";
+import { Headline } from "../value-objects/headline.vo";
+import { Summary } from "../value-objects/summary.vo";
+import { Location } from "../value-objects/location.vo";
+import { ImageUrl } from "../value-objects/image-url.vo";
+import { Skill } from "../entities/skill.entity";
+import { Experience } from "../entities/experience.entity";
+import { Education } from "../entities/education.entity";
+import { Certification } from "../entities/certification.entity";
+import { SkillId } from "../value-objects/skill-id.vo";
 
 export class UserProfile {
   private _skills: Skill[] = [];
@@ -54,66 +54,104 @@ export class UserProfile {
     );
   }
 
-  get skills() { return [...this._skills]; }
-  get experiences() { return [...this._experiences].sort((a,b) => a.order - b.order); }
-  get educations() { return [...this._educations].sort((a,b) => a.order - b.order); }
-  get certifications() { return [...this._certifications]; }
+  get skills() {
+    return [...this._skills];
+  }
+  get experiences() {
+    return [...this._experiences].sort((a, b) => a.order - b.order);
+  }
+  get educations() {
+    return [...this._educations].sort((a, b) => a.order - b.order);
+  }
+  get certifications() {
+    return [...this._certifications];
+  }
 
   addSkill(skill: Skill) {
-    if (this._skills.find(s => s.id.toString() === skill.id.toString())) throw new Error('Skill already exists');
+    if (this._skills.find((s) => s.id.toString() === skill.id.toString()))
+      throw new Error("Skill already exists");
     this._skills.push(skill);
     this.touch();
   }
 
   endorseSkill(skillId: SkillId) {
-    const idx = this._skills.findIndex(s => s.id.toString() === skillId.toString());
-    if (idx === -1) throw new Error('Skill not found');
+    const idx = this._skills.findIndex(
+      (s) => s.id.toString() === skillId.toString()
+    );
+    if (idx === -1) throw new Error("Skill not found");
     const skill = this._skills[idx];
     this._skills[idx] = skill.endorse();
     this.touch();
   }
 
   removeSkill(skillId: SkillId) {
-    this._skills = this._skills.filter(s => s.id.toString() !== skillId.toString());
+    this._skills = this._skills.filter(
+      (s) => s.id.toString() !== skillId.toString()
+    );
     this.touch();
   }
 
   addExperience(exp: Experience) {
-    if (this._experiences.find(e => e.id.toString() === exp.id.toString())) throw new Error('Experience already exists');
+    if (this._experiences.find((e) => e.id.toString() === exp.id.toString()))
+      throw new Error("Experience already exists");
     const order = this._experiences.length;
     this._experiences.push(exp.withOrder(order));
     this.touch();
   }
 
   reorderExperience(id: string, newIndex: number) {
-    const idx = this._experiences.findIndex(e => e.id.toString() === id);
-    if (idx === -1) throw new Error('Experience not found');
-    const [item] = this._experiences.splice(idx,1);
-    this._experiences.splice(newIndex,0,item);
+    const idx = this._experiences.findIndex((e) => e.id.toString() === id);
+    if (idx === -1) throw new Error("Experience not found");
+    const [item] = this._experiences.splice(idx, 1);
+    this._experiences.splice(newIndex, 0, item);
     // reassign orders
-    this._experiences = this._experiences.map((e,i) => e.withOrder(i));
+    this._experiences = this._experiences.map((e, i) => e.withOrder(i));
     this.touch();
   }
 
   addEducation(edu: Education) {
-    if (this._educations.find(e => e.id.toString() === edu.id.toString())) throw new Error('Education already exists');
+    if (this._educations.find((e) => e.id.toString() === edu.id.toString()))
+      throw new Error("Education already exists");
     const order = this._educations.length;
     this._educations.push(edu.withOrder(order));
     this.touch();
   }
 
   addCertification(cert: Certification) {
-    if (this._certifications.find(c => c.id.toString() === cert.id.toString())) throw new Error('Certification already exists');
+    if (
+      this._certifications.find((c) => c.id.toString() === cert.id.toString())
+    )
+      throw new Error("Certification already exists");
     this._certifications.push(cert);
     this.touch();
   }
 
-  updateHeadline(headline?: Headline) { this.headline = headline; this.touch(); }
-  updateSummary(summary?: Summary) { this.summary = summary; this.touch(); }
-  updateLocation(location?: Location) { this.location = location; this.touch(); }
-  updateProfileImage(image?: ImageUrl) { this.profileImage = image; this.touch(); }
-  updateBannerImage(image?: ImageUrl) { this.bannerImage = image; this.touch(); }
-  updateFullName(fullName: FullName) { this.fullName = fullName; this.touch(); }
+  updateHeadline(headline?: Headline) {
+    this.headline = headline;
+    this.touch();
+  }
+  updateSummary(summary?: Summary) {
+    this.summary = summary;
+    this.touch();
+  }
+  updateLocation(location?: Location) {
+    this.location = location;
+    this.touch();
+  }
+  updateProfileImage(image?: ImageUrl) {
+    this.profileImage = image;
+    this.touch();
+  }
+  updateBannerImage(image?: ImageUrl) {
+    this.bannerImage = image;
+    this.touch();
+  }
+  updateFullName(fullName: FullName) {
+    this.fullName = fullName;
+    this.touch();
+  }
 
-  private touch() { this.updatedAt = new Date(); }
+  private touch() {
+    this.updatedAt = new Date();
+  }
 }

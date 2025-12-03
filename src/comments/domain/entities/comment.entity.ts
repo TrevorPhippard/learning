@@ -1,6 +1,6 @@
-import { CommentId } from '../value-objects/comment-id.vo';
-import { PostId } from '../value-objects/post-id.vo';
-import { UserId } from '../value-objects/user-id.vo';
+import { CommentId } from "../value-objects/comment-id.vo";
+import { PostId } from "../value-objects/post-id.vo";
+import { UserId } from "../value-objects/user-id.vo";
 
 export class Comment {
   constructor(

@@ -1,11 +1,11 @@
-import { ClientsProviderAsyncOptions, Transport } from '@nestjs/microservices';
-import type { TcpOptions } from '@nestjs/microservices/interfaces/microservice-configuration.interface';
+import { ClientsProviderAsyncOptions, Transport } from "@nestjs/microservices";
+import type { TcpOptions } from "@nestjs/microservices/interfaces/microservice-configuration.interface";
 
-const DEFAULT_HOST = 'users';
+const DEFAULT_HOST = "users";
 const DEFAULT_PORT = 3006;
 
 export const usersClientFactory: ClientsProviderAsyncOptions = {
-  name: 'USERS_SERVICE',
+  name: "USERS_SERVICE",
   useFactory: () => ({
     transport: Transport.TCP,
     options: {

@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { User } from '../../domain/entities/user.entity';
+import { Observable } from "rxjs";
+import { User } from "../../domain/entities/user.entity";
 
 export interface UserRepositoryPort {
   [x: string]: any;
@@ -10,8 +10,8 @@ export interface UserRepositoryPort {
   delete(id: string): Promise<void> | void;
   send<TInput = any, TOutput = any>(
     pattern: TInput,
-    payload: any,
+    payload: any
   ): Observable<TOutput>;
 }
 
-export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
+export const USER_REPOSITORY = Symbol("USER_REPOSITORY");

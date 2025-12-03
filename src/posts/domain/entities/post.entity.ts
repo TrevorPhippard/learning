@@ -1,9 +1,14 @@
-import { PostId } from '../value-objects/post-id.vo';
-import { UserId } from '../value-objects/user-id.vo';
+import { PostId } from "../value-objects/post-id.vo";
+import { UserId } from "../value-objects/user-id.vo";
 
 export class Post {
-  private _reactions: { userId: UserId, type: string }[] = [];
-  private _comments: { id: string, userId: UserId, content: string, createdAt: Date }[] = [];
+  private _reactions: { userId: UserId; type: string }[] = [];
+  private _comments: {
+    id: string;
+    userId: UserId;
+    content: string;
+    createdAt: Date;
+  }[] = [];
 
   constructor(
     public readonly id: PostId,
@@ -13,8 +18,12 @@ export class Post {
     public updatedAt: Date = new Date()
   ) {}
 
-  get reactions() { return [...this._reactions]; }
-  get comments() { return [...this._comments]; }
+  get reactions() {
+    return [...this._reactions];
+  }
+  get comments() {
+    return [...this._comments];
+  }
 
   updateContent(newContent: string) {
     this.content = newContent;
@@ -30,5 +39,7 @@ export class Post {
     this._comments.push({ id, userId, content, createdAt: new Date() });
   }
 
-  private touch() { this.updatedAt = new Date(); }
+  private touch() {
+    this.updatedAt = new Date();
+  }
 }

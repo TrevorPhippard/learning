@@ -1,8 +1,15 @@
-import { Controller, Post as HttpPost, Body, Get, Param, Patch } from '@nestjs/common';
-import { CommentService } from '../application/services/comment.service';
-import { CreateCommentDto } from '../application/dtos/create-comment.dto';
+import {
+  Controller,
+  Post as HttpPost,
+  Body,
+  Get,
+  Param,
+  Patch,
+} from "@nestjs/common";
+import { CommentService } from "../application/services/comment.service";
+import { CreateCommentDto } from "../application/dtos/create-comment.dto";
 
-@Controller('comments')
+@Controller("comments")
 export class CommentController {
   constructor(private readonly svc: CommentService) {}
 
@@ -11,18 +18,21 @@ export class CommentController {
     return this.svc.create(dto);
   }
 
-  @Get(':id')
-  async get(@Param('id') id: string) {
+  @Get(":id")
+  async get(@Param("id") id: string) {
     return this.svc.getById(id);
   }
 
-  @Get('post/:postId')
-  async findByPost(@Param('postId') postId: string) {
+  @Get("post/:postId")
+  async findByPost(@Param("postId") postId: string) {
     return this.svc.findByPost(postId);
   }
 
-  @Patch(':id')
-  async updateContent(@Param('id') id: string, @Body('content') content: string) {
+  @Patch(":id")
+  async updateContent(
+    @Param("id") id: string,
+    @Body("content") content: string
+  ) {
     return this.svc.updateContent(id, content);
   }
 }

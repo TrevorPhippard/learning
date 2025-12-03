@@ -3,13 +3,13 @@ export class Email {
 
   constructor(email: string) {
     if (!this.isValid(email)) {
-      throw new Error('Invalid email format');
+      throw new Error("Invalid email format");
     }
     this.value = email;
   }
 
   private isValid(email: string): boolean {
-    return email.includes('@');
+    return email.includes("@");
   }
 
   getValue(): string {

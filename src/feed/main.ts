@@ -1,9 +1,8 @@
-import { NestFactory } from '@nestjs/core';
-import { FeedModule } from './feed.module';
+import { NestFactory } from "@nestjs/core";
+import { FeedModule } from "./feed.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(FeedModule);
-  await app.listen(process.env.PORT ?? 3003);
+  await app.listen(3003);
 }
 bootstrap();
-

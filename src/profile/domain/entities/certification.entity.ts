@@ -1,4 +1,4 @@
-import { CertificationId } from '../value-objects/certification-id.vo';
+import { CertificationId } from "../value-objects/certification-id.vo";
 
 export class Certification {
   constructor(
@@ -6,5 +6,7 @@ export class Certification {
     public readonly name: string,
     public readonly issuingOrganization?: string,
     public readonly receivedAt?: Date
-  ) { if (!name || !name.trim()) throw new Error('certification name required'); }
+  ) {
+    if (!name || !name.trim()) throw new Error("certification name required");
+  }
 }

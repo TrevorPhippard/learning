@@ -2,12 +2,12 @@ export class RefreshToken {
   private readonly value: string;
 
   constructor(token: string) {
-    if (!token || typeof token !== 'string') {
-      throw new Error('RefreshToken must be a non-empty string');
+    if (!token || typeof token !== "string") {
+      throw new Error("RefreshToken must be a non-empty string");
     }
 
     if (token.length < 32) {
-      throw new Error('RefreshToken must be at least 32 characters long');
+      throw new Error("RefreshToken must be at least 32 characters long");
     }
 
     this.value = token;

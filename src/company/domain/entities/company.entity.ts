@@ -1,4 +1,4 @@
-import { CompanyId } from '../value-objects/company-id.vo';
+import { CompanyId } from "../value-objects/company-id.vo";
 
 export class Company {
   constructor(
@@ -12,10 +12,27 @@ export class Company {
     public updatedAt: Date = new Date()
   ) {}
 
-  updateName(name: string) { this.name = name; this.touch(); }
-  updateDescription(description: string) { this.description = description; this.touch(); }
-  updateWebsite(website: string) { this.website = website; this.touch(); }
-  updateIndustry(industry: string) { this.industry = industry; this.touch(); }
-  updateLocation(location: string) { this.location = location; this.touch(); }
-  private touch() { this.updatedAt = new Date(); }
+  updateName(name: string) {
+    this.name = name;
+    this.touch();
+  }
+  updateDescription(description: string) {
+    this.description = description;
+    this.touch();
+  }
+  updateWebsite(website: string) {
+    this.website = website;
+    this.touch();
+  }
+  updateIndustry(industry: string) {
+    this.industry = industry;
+    this.touch();
+  }
+  updateLocation(location: string) {
+    this.location = location;
+    this.touch();
+  }
+  private touch() {
+    this.updatedAt = new Date();
+  }
 }

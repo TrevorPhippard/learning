@@ -1,6 +1,6 @@
-import { UserId } from '../value-objects/user-id.vo';
-import { SessionId } from '../value-objects/session-id.vo'; // You will need this VO
-// import { RefreshToken } from '../value-objects/refresh-token.vo'; // Optional suggestion
+import { UserId } from "../value-objects/user-id.vo";
+import { SessionId } from "../value-objects/session-id.vo"; // You will need this VO
+// import { RefreshToken } from "../value-objects/refresh-token.vo"; // Optional suggestion
 
 export class Session {
   constructor(
@@ -11,7 +11,7 @@ export class Session {
     private ip_address: string, // store as text, DB casts to INET
     private expires_at: Date,
     private readonly createdAt: Date,
-    private updatedAt: Date,
+    private updatedAt: Date
   ) {}
 
   static create(params: {
@@ -22,7 +22,7 @@ export class Session {
     expires_at: Date;
   }): Session {
     if (!params.refresh_token) {
-      throw new Error('Refresh token cannot be empty');
+      throw new Error("Refresh token cannot be empty");
     }
 
     return new Session(
@@ -31,11 +31,11 @@ export class Session {
         ? params.user_id
         : new UserId(params.user_id),
       params.refresh_token,
-      params.user_agent || '',
-      params.ip_address || '',
+      params.user_agent || "",
+      params.ip_address || "",
       params.expires_at,
       new Date(),
-      new Date(),
+      new Date()
     );
   }
 
@@ -72,7 +72,7 @@ export class Session {
   }
 
   updateRefreshToken(token: string) {
-    if (!token) throw new Error('Refresh token cannot be empty');
+    if (!token) throw new Error("Refresh token cannot be empty");
     this.refresh_token = token;
     this.updatedAt = new Date();
   }

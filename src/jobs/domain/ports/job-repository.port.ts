@@ -1,6 +1,6 @@
-import { Job } from '../entities/job.entity';
-import { JobId } from '../value-objects/job-id.vo';
-import { UserId } from '../value-objects/user-id.vo';
+import { Job } from "../entities/job.entity";
+import { JobId } from "../value-objects/job-id.vo";
+import { UserId } from "../value-objects/user-id.vo";
 
 export interface JobRepository {
   save(job: Job): Promise<void>;
@@ -8,4 +8,4 @@ export interface JobRepository {
   findByAuthor(authorId: UserId, limit?: number): Promise<Job[]>;
 }
 
-export const JOB_REPOSITORY = Symbol('JOB_REPOSITORY');
+export const JOB_REPOSITORY = Symbol("JOB_REPOSITORY");

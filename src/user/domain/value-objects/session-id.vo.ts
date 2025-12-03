@@ -1,11 +1,11 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from "crypto";
 
 export class SessionId {
   private readonly value: string;
 
   constructor(id?: string) {
     if (id && !SessionId.isValidUUID(id)) {
-      throw new Error('Invalid SessionId: must be a valid UUID');
+      throw new Error("Invalid SessionId: must be a valid UUID");
     }
 
     this.value = id ?? randomUUID();

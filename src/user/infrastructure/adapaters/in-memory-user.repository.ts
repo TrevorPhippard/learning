@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { UserRepositoryPort } from '../../application/ports/user.repository.port';
-import { User } from '../../domain/entities/user.entity';
-import { Observable } from 'rxjs';
+import { Injectable } from "@nestjs/common";
+import { UserRepositoryPort } from "../../application/ports/user.repository.port";
+import { User } from "../../domain/entities/user.entity";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class InMemoryUserRepository implements UserRepositoryPort {
   [x: string]: any;
   send<TInput = any, TOutput = any>(
     pattern: TInput,
-    payload: any,
+    payload: any
   ): Observable<TOutput> {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   private readonly users: Map<string, User> = new Map();
 

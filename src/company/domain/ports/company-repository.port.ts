@@ -1,5 +1,5 @@
-import { Company } from '../entities/company.entity';
-import { CompanyId } from '../value-objects/company-id.vo';
+import { Company } from "../entities/company.entity";
+import { CompanyId } from "../value-objects/company-id.vo";
 
 export interface CompanyRepository {
   save(company: Company): Promise<void>;
@@ -7,4 +7,4 @@ export interface CompanyRepository {
   findAll(limit?: number): Promise<Company[]>;
 }
 
-export const COMPANY_REPOSITORY = Symbol('COMPANY_REPOSITORY');
+export const COMPANY_REPOSITORY = Symbol("COMPANY_REPOSITORY");

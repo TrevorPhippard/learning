@@ -1,11 +1,11 @@
-import { ClientsProviderAsyncOptions, Transport } from '@nestjs/microservices';
-import type { TcpOptions } from '@nestjs/microservices/interfaces/microservice-configuration.interface';
+import { ClientsProviderAsyncOptions, Transport } from "@nestjs/microservices";
+import type { TcpOptions } from "@nestjs/microservices/interfaces/microservice-configuration.interface";
 
-const DEFAULT_HOST = 'feed';
+const DEFAULT_HOST = "feed";
 const DEFAULT_PORT = 3003;
 
 export const feedClientFactory: ClientsProviderAsyncOptions = {
-  name: 'FEED_SERVICE',
+  name: "FEED_SERVICE",
   useFactory: () => ({
     transport: Transport.TCP,
     options: {

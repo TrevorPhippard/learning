@@ -17,6 +17,19 @@ services:
     networks:
     - kitty-net
 
+  users:
+    build:
+      context: .
+      dockerfile: ./src/user/Dockerfile
+    ports: ["3006:3006"]
+    environment:
+      PORT: 3006
+      USERS_DATABASE_URL: postgresql://cybercat:cybercat@postgres-users:5432/users_db
+    depends_on:
+      postgres-users:
+        condition: service_healthy
+    networks:
+      - kitty-net
   posts:
     build:
       context: .
@@ -148,7 +161,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U cybercat -d posts_db"]
       interval: 10s
       timeout: 5s
-      retries: 5  
+      retries: 5
     networks:
     - kitty-net
   postgres-profile:
@@ -180,7 +193,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U cybercat -d jobs_db"]
       interval: 10s
       timeout: 5s
-      retries: 5  
+      retries: 5
     networks:
     - kitty-net
   postgres-company:
@@ -199,13 +212,30 @@ services:
       retries: 5
     networks:
     - kitty-net
-    
+  postgres-users:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cybercat
+      POSTGRES_PASSWORD: cybercat
+      POSTGRES_DB: users_db
+    ports: ["5437:5432"]
+    volumes:
+      - postgres-users-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybercat -d users_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kitty-net
+
 volumes:
   postgres-comments-data:
   postgres-posts-data:
   postgres-profile-data:
   postgres-jobs-data:
   postgres-company-data:
+  postgres-users-data:
   kafka_data:
 
 

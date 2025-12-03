@@ -6,28 +6,28 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   CreateUserDto,
   CreateUserUseCase,
-} from '../application/use-cases/create-user.use-case';
-import { User } from '../domain/entities/user.entity';
-import { GetUserUseCase } from '../application/use-cases/get-user.use-case';
-import { ListUsersUseCase } from '../application/use-cases/list-users.use-case';
-import { DeleteUserUseCase } from '../application/use-cases/delete-user.use-case';
+} from "../application/use-cases/create-user.use-case";
+import { User } from "../domain/entities/user.entity";
+import { GetUserUseCase } from "../application/use-cases/get-user.use-case";
+import { ListUsersUseCase } from "../application/use-cases/list-users.use-case";
+import { DeleteUserUseCase } from "../application/use-cases/delete-user.use-case";
 import {
   UpdateUserDto,
   UpdateUserUseCase,
-} from '../application/use-cases/update-user.use-case';
+} from "../application/use-cases/update-user.use-case";
 
-@Controller('users')
+@Controller("users")
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly getUserUseCase: GetUserUseCase,
     private readonly listUsersUseCase: ListUsersUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
-    private readonly updateUserUseCase: UpdateUserUseCase,
+    private readonly updateUserUseCase: UpdateUserUseCase
   ) {}
 
   @Post()
@@ -36,8 +36,8 @@ export class UserController {
     return this.mapUserToResponse(user);
   }
 
-  @Get(':id')
-  async getUser(@Param('id') id: string) {
+  @Get(":id")
+  async getUser(@Param("id") id: string) {
     const user = await this.getUserUseCase.execute(id);
     return this.mapUserToResponse(user);
   }
@@ -48,23 +48,23 @@ export class UserController {
     return users.map((user) => this.mapUserToResponse(user));
   }
 
-  @Get('ping')
+  @Get("ping")
   pingService() {
     const startTs = Date.now();
     return {
-      message: { cmd: 'ping' },
+      message: { cmd: "ping" },
       duration: Date.now() - startTs,
     };
   }
 
-  @Patch(':id')
-  async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+  @Patch(":id")
+  async updateUser(@Param("id") id: string, @Body() body: UpdateUserDto) {
     const user = await this.updateUserUseCase.execute(id, body);
     return this.mapUserToResponse(user);
   }
 
-  @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
+  @Delete(":id")
+  async deleteUser(@Param("id") id: string) {
     await this.deleteUserUseCase.execute(id);
   }
 

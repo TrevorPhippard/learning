@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
 
-describe('AppController', () => {
+describe("AppController", () => {
   let controller: AppController;
 
   const mockService = {
@@ -20,17 +20,17 @@ describe('AppController', () => {
     controller = module.get<AppController>(AppController);
   });
 
-  it('should call service.getUserProfile on GET /profile/:id', () => {
-    controller.getProfile('123');
-    expect(mockService.getUserProfile).toHaveBeenCalledWith('123');
+  it("should call service.getUserProfile on GET /profile/:id", () => {
+    controller.getProfile("123");
+    expect(mockService.getUserProfile).toHaveBeenCalledWith("123");
   });
 
-  it('should call createPost + emitPostCreatedEvent', async () => {
-    mockService.createPost.mockResolvedValue({ id: 'p1' });
+  it("should call createPost + emitPostCreatedEvent", async () => {
+    mockService.createPost.mockResolvedValue({ id: "p1" });
 
-    await controller.createPost({ user: { id: 'u1' } }, { content: 'hello' });
+    await controller.createPost({ user: { id: "u1" } }, { content: "hello" });
 
     expect(mockService.createPost).toHaveBeenCalled();
-    expect(mockService.emitPostCreatedEvent).toHaveBeenCalledWith({ id: 'p1' });
+    expect(mockService.emitPostCreatedEvent).toHaveBeenCalledWith({ id: "p1" });
   });
 });

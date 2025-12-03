@@ -1,5 +1,5 @@
-import { Email } from '../value-objects/email.vo';
-import { UserId } from '../value-objects/user-id.vo';
+import { Email } from "../value-objects/email.vo";
+import { UserId } from "../value-objects/user-id.vo";
 
 export class User {
   constructor(
@@ -10,23 +10,23 @@ export class User {
     private readonly password_hash: string, //Argon2/Bcrypt
     private readonly last_login_at: Date,
     private readonly createdAt: Date,
-    private updatedAt: Date,
+    private updatedAt: Date
   ) {}
 
   static create(name: string, email: string) {
     if (!name || name.trim().length < 2) {
-      throw new Error('Name must be at least 2 characters long');
+      throw new Error("Name must be at least 2 characters long");
     }
 
     return new User(
       new UserId(),
       name.trim(),
       new Email(email),
-      false,             // email_verified
-      '',                // password_hash
-      new Date(),        // last_login_at
-      new Date(),        // createdAt
-      new Date(),        // updatedAt
+      false, // email_verified
+      "", // password_hash
+      new Date(), // last_login_at
+      new Date(), // createdAt
+      new Date() // updatedAt
     );
   }
 
@@ -52,7 +52,7 @@ export class User {
 
   updateName(name: string) {
     if (!name || name.trim().length > 2) {
-      throw new Error('Name must be at least 2 characters long');
+      throw new Error("Name must be at least 2 characters long");
     }
 
     this.name = name;

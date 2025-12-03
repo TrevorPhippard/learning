@@ -1,8 +1,15 @@
-import { Controller, Post as HttpPost, Body, Get, Param, Patch } from '@nestjs/common';
-import { CompanyService } from '../application/services/company.service';
-import { CreateCompanyDto } from '../application/dtos/create-company.dto';
+import {
+  Controller,
+  Post as HttpPost,
+  Body,
+  Get,
+  Param,
+  Patch,
+} from "@nestjs/common";
+import { CompanyService } from "../application/services/company.service";
+import { CreateCompanyDto } from "../application/dtos/create-company.dto";
 
-@Controller('companies')
+@Controller("companies")
 export class CompanyController {
   constructor(private readonly svc: CompanyService) {}
 
@@ -11,8 +18,8 @@ export class CompanyController {
     return this.svc.create(dto);
   }
 
-  @Get(':id')
-  async get(@Param('id') id: string) {
+  @Get(":id")
+  async get(@Param("id") id: string) {
     return this.svc.getById(id);
   }
 
@@ -21,8 +28,11 @@ export class CompanyController {
     return this.svc.findAll();
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: Partial<CreateCompanyDto>) {
+  @Patch(":id")
+  async update(
+    @Param("id") id: string,
+    @Body() dto: Partial<CreateCompanyDto>
+  ) {
     return this.svc.updateCompany(id, dto);
   }
 }

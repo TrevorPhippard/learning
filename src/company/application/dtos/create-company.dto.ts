@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsUrl } from "class-validator";
 
 export class CreateCompanyDto {
   @IsNotEmpty()

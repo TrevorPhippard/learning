@@ -1,10 +1,10 @@
-import { PostRepository } from '../../domain/ports/post-repository.port';
-import { Post } from '../../domain/entities/post.entity';
-import { PostId } from '../../domain/value-objects/post-id.vo';
-import { UserId } from '../../domain/value-objects/user-id.vo';
-import { db } from '../drizzle/db';
-import { posts, post_comments, post_reactions } from '../drizzle/schema';
-import { eq } from 'drizzle-orm';
+import { PostRepository } from "../../domain/ports/post-repository.port";
+import { Post } from "../../domain/entities/post.entity";
+import { PostId } from "../../domain/value-objects/post-id.vo";
+import { UserId } from "../../domain/value-objects/user-id.vo";
+import { db } from "../drizzle/db";
+import { posts, post_comments, post_reactions } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export class DrizzlePostRepository implements PostRepository {
   async save(post: Post): Promise<void> {
@@ -16,47 +16,49 @@ export class DrizzlePostRepository implements PostRepository {
         author_id: post.authorId.toString(),
         content: post.content,
         created_at: post.createdAt,
-        updated_at: post.updatedAt
+        updated_at: post.updatedAt,
       })
       .onConflictDoUpdate({
         target: posts.id,
         set: {
           content: post.content,
-          updated_at: new Date()
-        }
+          updated_at: new Date(),
+        },
       });
 
     // Replace reactions
-    await db.delete(post_reactions).where(eq(post_reactions.post_id, post.id.toString()));
+    await db
+      .delete(post_reactions)
+      .where(eq(post_reactions.post_id, post.id.toString()));
 
     if (post.reactions.length) {
-      const reactions = post.reactions.map(r => ({
+      const reactions = post.reactions.map((r) => ({
         id: `${r.userId.toString()}_${post.id.toString()}`,
         post_id: post.id.toString(),
         user_id: r.userId.toString(),
-        type: r.type
+        type: r.type,
       }));
       await db.insert(post_reactions).values(reactions); // FIXED
     }
 
     // Replace comments
-    await db.delete(post_comments).where(eq(post_comments.post_id, post.id.toString()));
+    await db
+      .delete(post_comments)
+      .where(eq(post_comments.post_id, post.id.toString()));
 
     if (post.comments.length) {
-      const comments = post.comments.map(c => ({
+      const comments = post.comments.map((c) => ({
         id: c.id.toString(), // FIXED
         post_id: post.id.toString(),
         author_id: c.userId.toString(),
         content: c.content,
-        created_at: c.createdAt
+        created_at: c.createdAt,
       }));
       await db.insert(post_comments).values(comments); // FIXED
     }
   }
 
   private async mapRow(row: any): Promise<Post> {
-
-
     const post = new Post(
       PostId.of(row.id),
       UserId.of(row.author_id),

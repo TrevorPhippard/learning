@@ -1,11 +1,11 @@
-import { ClientsProviderAsyncOptions, Transport } from '@nestjs/microservices';
-import type { TcpClientOptions } from '@nestjs/microservices/interfaces/client-metadata.interface';
+import { ClientsProviderAsyncOptions, Transport } from "@nestjs/microservices";
+import type { TcpClientOptions } from "@nestjs/microservices/interfaces/client-metadata.interface";
 
-const DEFAULT_HOST = 'messaging';
+const DEFAULT_HOST = "messaging";
 const DEFAULT_PORT = 3008;
 
 export const messagingClientFactory: ClientsProviderAsyncOptions = {
-  name: 'MESSAGING_SERVICE',
+  name: "MESSAGING_SERVICE",
   useFactory: (): TcpClientOptions => ({
     transport: Transport.TCP,
     options: {
