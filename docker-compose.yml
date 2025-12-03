@@ -1,0 +1,214 @@
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./src/gateway/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      POSTS_SERVICE_URL: http://posts:3001
+      COMMENTS_SERVICE_URL: http://comments:3002
+      FEED_SERVICE_URL: http://feed:3003
+      JOBS_SERVICE_URL: http://jobs:3004
+      COMPANY_SERVICE_URL: http://company:3005
+      KAFKA_BROKER: kafka:9092
+    depends_on:
+      - kafka
+    networks:
+    - kitty-net
+
+  posts:
+    build:
+      context: .
+      dockerfile: ./src/posts/Dockerfile
+    ports: ["3001:3001"]
+    environment:
+      PORT: 3001
+      POSTS_DATABASE_URL: postgresql://cybercat:cybercat@postgres-posts:5432/posts_db
+    depends_on:
+      postgres-posts:
+        condition: service_healthy
+    networks:
+    - kitty-net
+  comments:
+    build:
+      context: .
+      dockerfile: ./src/comments/Dockerfile
+    ports: ["3002:3002"]
+    environment:
+      PORT: 3002
+      COMMENTS_DATABASE_URL: postgresql://cybercat:cybercat@postgres-comments:5432/comments_db
+    depends_on:
+      postgres-comments:
+        condition: service_healthy
+    networks:
+    - kitty-net
+  feed:
+    build:
+      context: .
+      dockerfile: ./src/feed/Dockerfile
+    ports: ["3003:3003"]
+    environment:
+      PORT: 3003
+      REDIS_URL: redis://redis:6379
+      POSTS_SERVICE_URL: http://posts:3001
+      COMMENTS_SERVICE_URL: http://comments:3002
+      FEED_CACHE_TTL: 60
+    depends_on:
+      - posts
+      - comments
+      - redis
+    networks:
+    - kitty-net
+  jobs:
+    build:
+      context: .
+      dockerfile: ./src/jobs/Dockerfile
+    ports: ["3004:3004"]
+    environment:
+      PORT: 3004
+      JOBS_DATABASE_URL: postgresql://cybercat:cybercat@postgres-jobs:5432/jobs_db
+    depends_on:
+      postgres-jobs:
+        condition: service_healthy
+    networks:
+    - kitty-net
+  company:
+    build:
+      context: .
+      dockerfile: ./src/company/Dockerfile
+    ports: ["3005:3005"]
+    environment:
+      PORT: 3005
+      COMPANY_DATABASE_URL: postgresql://cybercat:cybercat@postgres-company:5432/company_db
+    depends_on:
+      postgres-company:
+        condition: service_healthy
+    networks:
+    - kitty-net
+
+  kafka:
+    image: apache/kafka:3.8.0 # Use the specific version you prefer
+    container_name: kafka_broker
+    ports:
+      - "9092:9092"
+    environment:
+      # --- KRaft Configuration ---
+      # Generated via `kafka-storage.sh random-uuid`
+      KAFKA_CLUSTER_ID: "MkU3OEVBNTcwLTlCMTctNDA4QS05QzE4LTVCOTk2QTYzQkE3Ng=="
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_LISTENERS: "PLAINTEXT://:9092,CONTROLLER://:9093"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
+      # --- Topic & Log Configuration ---
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # Optional: Auto-create topics for simplicity in development
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+    - kitty-net
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+    networks:
+    - kitty-net
+  postgres-comments:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cybercat
+      POSTGRES_PASSWORD: cybercat
+      POSTGRES_DB: comments_db
+    ports: ["5432:5432"]
+    volumes:
+      - postgres-comments-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybercat -d comments_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+    - kitty-net
+  postgres-posts:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cybercat
+      POSTGRES_PASSWORD: cybercat
+      POSTGRES_DB: posts_db
+    ports: ["5433:5432"]
+    volumes:
+      - postgres-posts-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybercat -d posts_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
+    networks:
+    - kitty-net
+  postgres-profile:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cybercat
+      POSTGRES_PASSWORD: cybercat
+      POSTGRES_DB: profile_db
+    ports: ["5434:5432"]
+    volumes:
+      - postgres-profile-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybercat -d profile_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+    - kitty-net
+  postgres-jobs:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cybercat
+      POSTGRES_PASSWORD: cybercat
+      POSTGRES_DB: jobs_db
+    ports: ["5435:5432"]
+    volumes:
+      - postgres-jobs-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybercat -d jobs_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5  
+    networks:
+    - kitty-net
+  postgres-company:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: cybercat
+      POSTGRES_PASSWORD: cybercat
+      POSTGRES_DB: company_db
+    ports: ["5436:5432"]
+    volumes:
+      - postgres-company-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cybercat -d company_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+    - kitty-net
+    
+volumes:
+  postgres-comments-data:
+  postgres-posts-data:
+  postgres-profile-data:
+  postgres-jobs-data:
+  postgres-company-data:
+  kafka_data:
+
+
+networks:
+  kitty-net:
+    driver: bridge
