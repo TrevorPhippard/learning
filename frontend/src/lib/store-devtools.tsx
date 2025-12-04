@@ -1,0 +1,50 @@
+import { EventClient } from '@tanstack/devtools-event-client'
+import { useEffect, useState } from 'react'
+
+import { fullName, store } from './store'
+
+type EventMap = {
+  'store-devtools:state': {
+    fullName: string
+  }
+}
+
+class StoreDevtoolsEventClient extends EventClient<EventMap> {
+  constructor() {
+    super({
+      pluginId: 'store-devtools',
+    })
+  }
+}
+
+const sdec = new StoreDevtoolsEventClient()
+
+store.subscribe(() => {
+  sdec.emit('state', {
+    fullName: fullName.state,
+  })
+})
+
+function DevtoolPanel() {
+  const [state, setState] = useState<EventMap['store-devtools:state']>(() => ({
+    fullName: fullName.state,
+  }))
+
+  useEffect(() => {
+    return sdec.on('state', (e) => setState(e.payload))
+  }, [])
+
+  return (
+    <div className="p-4 grid gap-4 grid-cols-[1fr_10fr]">
+      <div className="text-sm font-bold text-gray-500 whitespace-nowrap">
+        Full Name
+      </div>
+      <div className="text-sm">{state.fullName}</div>
+    </div>
+  )
+}
+
+export default {
+  name: 'TanStack Store',
+  render: <DevtoolPanel />,
+}
