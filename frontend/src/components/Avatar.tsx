@@ -16,7 +16,6 @@ export default function Avatar({ user, alt, size = 40 }: AvatarProps) {
   const navigate = useNavigate()
 
   const handleClick = useCallback(() => {
-    console.log('Avatar clicked, navigating to profile...', user)
     if (user.id) {
       navigate({ to: '/profile/$userId', params: { userId: user.id } })
     } else {
